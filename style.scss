@@ -128,7 +128,7 @@ body {
     }
 }
 
-#tracker-dialog-container {
+.modal-container {
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.4);
@@ -140,28 +140,28 @@ body {
     align-items: center;
     visibility: hidden;
 
-    .tracker-dialog {
+    .modal-dialog {
         width: 20%;
         background: white;
         box-shadow: 0 0 5px gray;
         border-radius: 10px;
         padding: 20px 30px;
 
-        .tracker-dialog-header {
+        .modal-dialog-header {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             border-bottom: 1px solid #c8c5c5;
             padding-bottom: 15px;
 
-            .tracker-dialog-heading {
+            .modal-dialog-heading {
                 font-size: 18px;
                 font-weight: 500;
                 text-decoration: underline;
                 text-underline-offset: 3px;
             }
 
-            #tracker-dialog-close-button {
+            .modal-dialog-close-button {
                 img {
                     height: 15px;
                     opacity: 0.5;
@@ -174,19 +174,19 @@ body {
             }
         }
 
-        .tracker-dialog-form {
+        .modal-dialog-form {
             display: flex;
             flex-direction: column;
             padding-top: 15px;
             font-family: 'Lato';
 
-            .tracker-dialog-form-label {
+            .modal-dialog-form-label {
                 color: gray;
                 font-size: 16px;
                 margin-bottom: 8px;
             }
 
-            .tracker-dialog-input-wrapper {
+            .modal-dialog-input-wrapper {
                 border: 1px solid #c8c5c5;
                 border-radius: 5px;
                 padding: 10px;
@@ -216,29 +216,46 @@ body {
                 }
             }
 
-            #tracker-dialog-create-button {
-                margin-top: 18px;
-                margin-bottom: 5px;
-                cursor: pointer;
-                padding: 10px 20px;
-                width: 100%;
-                border-radius: 10px;
-                background-color: #007a5a;
-                box-shadow: none;
-                border: none;
-                color: white;
-                font-size: 15px;
-                font-family: 'Lato';
-                font-weight: 600;
+            .modal-dialog-submit-wrapper {
+                display: flex;
+                flex-direction: row;
+                gap: 15px;
 
-                &:hover {
-                    background-color: #006a4a;
-                }
+                .modal-dialog-button {
+                    flex: 1 1 auto;
+                    margin-top: 18px;
+                    margin-bottom: 5px;
+                    cursor: pointer;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    box-shadow: none;
+                    border: none;
+                    color: white;
+                    font-size: 15px;
+                    font-family: 'Lato';
+                    font-weight: 600;
 
-                &:disabled {
-                    background-color: #e8e1e1;
-                    color: #208a6a;
-                    cursor: default;
+                    &.submit {
+                        background-color: #b33030;
+
+                        &:not(:disabled):hover {
+                            background-color: #a32020;
+                        }
+                    }
+
+                    &.cancel {
+                        background-color: #007a5a;
+
+                        &:not(:disabled):hover {
+                            background-color: #006a4a;
+                        }
+                    }
+
+                    &:disabled {
+                        background-color: #e8e1e1;
+                        color: #208a6a;
+                        cursor: default;
+                    }
                 }
             }
         }

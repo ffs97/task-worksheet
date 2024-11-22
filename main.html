@@ -38,19 +38,23 @@
         </div>
         <div class="clock"><span id="clock-hour">12</span><span>:</span><span id="clock-minute">45</span></div>
     </div>
-    <div id="tracker-dialog-container">
-        <div class="tracker-dialog">
-            <div class="tracker-dialog-header">
-                <span class="tracker-dialog-heading">Add Tracker</span>
-                <span id="tracker-dialog-close-button"><img src="img/remove.png"></span>
+    <div id="tracker-dialog-container" class="modal-container">
+        <div class="modal-dialog">
+            <div class="modal-dialog-header">
+                <span class="modal-dialog-heading">Add Tracker</span>
+                <span id="tracker-dialog-close-button" class="modal-dialog-close-button">
+                    <img src="img/remove.png">
+                </span>
             </div>
-            <div class="tracker-dialog-form">
-                <div class="tracker-dialog-form-label">What do you want to call your tracker?</div>
-                <div class="tracker-dialog-input-wrapper">
+            <div class="modal-dialog-form">
+                <div class="modal-dialog-form-label">What do you want to call your tracker?</div>
+                <div class="modal-dialog-input-wrapper">
                     <input id="tracker-dialog-id-input" placeholder="my-tracker-id">
                 </div>
-                <div class="tracker-dialog-submit-wrapper"><input type="button" id="tracker-dialog-create-button"
-                        value="Create" disabled></div>
+                <div class="modal-dialog-submit-wrapper">
+                    <input type="button" id="tracker-dialog-create-button" class="modal-dialog-button submit"
+                        value="Create" disabled>
+                </div>
             </div>
         </div>
     </div>
@@ -127,7 +131,6 @@
                             <li>project: (status, assignees [collated from tasks])</li>
                             <li>tasks (move cancelled / completed down)</li>
                             <li>sub-tasks (toggle showing cancelled / completed down)</li>
-                            <li>delete confirmations</li>
                         </ul>
                         v3+:
                         <ul>
@@ -141,6 +144,27 @@
                             <li>reminders for tasks (add project specific reminders and show in home)</li>
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="delete-dialog-container" class="modal-container">
+        <div class="modal-dialog">
+            <div class="modal-dialog-header">
+                <span class="modal-dialog-heading"></span>
+                <span id="delete-dialog-close-button" class="modal-dialog-close-button">
+                    <img src="img/remove.png">
+                </span>
+            </div>
+            <div class="modal-dialog-form">
+                <div class="modal-dialog-form-label">
+                    Are you sure you want to delete "<span id="delete-dialog-title"></span>"?
+                </div>
+                <div class="modal-dialog-submit-wrapper">
+                    <input type="button" id="delete-dialog-cancel-button" class="modal-dialog-button cancel"
+                        value="Cancel">
+                    <input type="button" id="delete-dialog-submit-button" class="modal-dialog-button submit"
+                        value="Delete">
                 </div>
             </div>
         </div>

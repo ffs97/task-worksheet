@@ -507,7 +507,16 @@ function addInfoBoxFunctions() {
     notesEditor.on('text-change', function () {
         getActiveInfoBoxSelection().notes = notesEditor.getContents();
     });
-    $("#item-delete").click(function () {
+
+
+    var deleteDialog = $("#delete-dialog-container");
+    $("#delete-dialog-close-button").click(function () {
+        deleteDialog.css("visibility", "hidden");
+    });
+    $("#delete-dialog-cancel-button").click(function () {
+        deleteDialog.css("visibility", "hidden");
+    });
+    $("#delete-dialog-submit-button").click(function () {
         if (selectedTask != undefined) {
             var tasks = getActiveProjectInfo().tasks;
             const idx = tasks.indexOf(selectedTask);
@@ -527,6 +536,13 @@ function addInfoBoxFunctions() {
             $(".project.selected").remove();
             unselectProject();
         }
+        deleteDialog.css("visibility", "hidden");
+    });
+    $("#item-delete").click(function () {
+        const [type, info] = getActiveInfoBoxSelection();
+        deleteDialog.find(".modal-dialog-heading").text("Confirm delete " + type);
+        deleteDialog.find("#delete-dialog-title").text(info.title);
+        deleteDialog.css("visibility", "visible");
     });
 
     $("#item-assignee-input").keypress(function (e) {
