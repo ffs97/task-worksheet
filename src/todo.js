@@ -96,21 +96,20 @@ function addTrackerFunctions() {
 
 function selectTracker(id) {
     if (id === selectedTracker) return;
-    if (selectedTracker != null) {
+    if (selectedTracker != undefined) {
         $(trackerIdPrefix + selectedTracker).removeClass("selected");
     }
-    $(trackerIdPrefix + id).addClass("selected");
+    unselectTask();
+    unselectProject();
+
     selectedTracker = id;
-
-    trackerIdElem.text("#" + id);
-
-    var info = todo.tracker_info[id];
+    $(trackerIdPrefix + id).addClass("selected");
+    const info = getActiveTrackerInfo();
     trackerTitleElem.val(info.title);
     if (info.description != "") {
         trackerDescElem.val(info.description);
         trackerDescElem.css("margin-bottom", "37px");
     }
-    unselectTask();
     clearProjects();
     addProjects(id);
     $(".tracker-header").css("visibility", "visible");
@@ -123,20 +122,21 @@ function addTracker(id) {
     });
 }
 
-function clearTrackers() {
-    $("#tracker-list").empty();
-    clearProjects();
-    unselectTask();
-    selectedTracker = null;
-    $(".tracker-header").css("visibility", "hidden");
-}
-
 function createNewTracker(id, title = "", description = "") {
     todo.trackers.push(id);
     todo.tracker_info[id] = { id: id, title: title, description: description, projects: [], project_info: {} };
     addTracker(id);
     selectTracker(id);
     trackerTitleElem.focus()
+}
+
+function clearTrackers() {
+    $("#tracker-list").empty();
+    clearProjects();
+    unselectTask();
+    unselectProject();
+    selectedTracker = undefined;
+    $(".tracker-header").css("visibility", "hidden");
 }
 
 // -------------------------------------
@@ -149,10 +149,10 @@ const projectIdPrefix = "#project-box_"
 const newProjectHTML = '\
     <div class="project" id="{project_id}"> \
         <div class="project-header"> \
-            <span class="project-title"><input placeholder="Untilted Project" value="{project_title}"></span> \
+            <span class="project-title">{project_title}</span> \
             <span class="project-task-add"><img src="img/add.png"></span> \
         </div> \
-        <div class="project-status"><span class="project-status-green" style="flex-basis: 33%"></span></div> \
+        <div class="project-status"><span class="project-status-green" style="flex-basis: 100%"></span></div> \
         <div class="project-task-box">\
             <div class="project-task-placeholder">Such empty, much wow</div>\
         </div> \
@@ -166,8 +166,8 @@ function addProjectFunctions() {
 
 function bindProjectCalls(id) {
     var projectBox = $(projectIdPrefix + id);
-    projectBox.find(".project-title input").change(function () {
-        todo.tracker_info[selectedTracker].project_info[id].title = $(this).val();
+    projectBox.find(".project-title").click(function () {
+        selectProject(id);
     });
     projectBox.find(".project-task-add").click(function () {
         createNewTask(id);
@@ -192,6 +192,22 @@ function bindProjectCalls(id) {
     });
 }
 
+function selectProject(id) {
+    selectedProject = id;
+    selectedTask = undefined;
+    $(".project.selected").removeClass("selected");
+    $(projectIdPrefix + id).addClass("selected");
+    uploadProjectToInfoBox();
+    $("#info-box-wrapper").css("visibility", "visible");
+}
+
+function unselectProject() {
+    selectedTask = undefined;
+    selectedProject = undefined;
+    $(".project.selected").removeClass("selected");
+    $("#info-box-wrapper").css("visibility", "hidden");
+}
+
 function addProject(id) {
     var projectColumns = $(".tracker-project-box .project-column");
     var shortestIndex, minHeight = Number.MAX_SAFE_INTEGER;
@@ -204,30 +220,30 @@ function addProject(id) {
     });
     var projectHTML = newProjectHTML
         .replaceAll("{project_id}", projectIdPrefix.substring(1) + id)
-        .replaceAll("{project_title}", todo.tracker_info[selectedTracker].project_info[id].title);
+        .replaceAll("{project_title}", getActiveTrackerInfo().project_info[id].title);
     projectColumns.eq(shortestIndex).append(projectHTML);
     bindProjectCalls(id);
     addTasks(id);
 }
 
-function createNewProject(title = "") {
+function createNewProject(title = "Untitled project") {
     const id = generateRandomId(10);
-    var tracker_info = todo.tracker_info[selectedTracker];
-    tracker_info.projects.push(id);
-    tracker_info.project_info[id] = { id: id, title: title, notes: {}, tasks: [], task_info: {} };
+    var trackerInfo = getActiveTrackerInfo();
+    trackerInfo.projects.push(id);
+    trackerInfo.project_info[id] = { id: id, title: title, notes: {}, tasks: [], task_info: {} };
     addProject(id);
-    $(projectIdPrefix + id + " .project-title input").focus();
-    unselectTask();
-}
-
-function clearProjects() {
-    $(".tracker-project-box .project-column").empty();
+    selectProject(id);
+    $("#item-title").focus();
 }
 
 function addProjects(trackerId) {
     todo.tracker_info[trackerId].projects.forEach(projectId => {
         addProject(projectId);
     });
+}
+
+function clearProjects() {
+    $(".tracker-project-box .project-column").empty();
 }
 
 // -------------------------------------
@@ -244,33 +260,27 @@ const newTaskHTML = '\
         <span class="task-drag"><img src="img/drag.png"></span>\
     </div>';
 
-function showUpdatedTaskInfo(projectId, taskId) {
-    const taskInfo = todo.tracker_info[selectedTracker].project_info[selectedProject].task_info[taskId];
-    var taskItem = $(taskIdPrefix + taskId);
-    taskItem.find(".task-title").text(taskInfo.title);
-    taskItem.find(".task-status img").attr("src", "img/status/" + taskInfo.status + ".png");
-}
-
 function selectTask(projectId, taskId) {
     selectedProject = projectId;
     selectedTask = taskId;
-    var taskItem = $(taskIdPrefix + taskId);
     $(".task.selected").removeClass("selected");
-    taskItem.addClass("selected");
-    uploadTaskInfo();
+    $(taskIdPrefix + taskId).addClass("selected");
+    uploadTaskToInfoBox();
     $("#info-box-wrapper").css("visibility", "visible");
 }
 
 function unselectTask() {
-    selectedProject = null;
-    selectedTask = null;
+    selectedTask = undefined;
     $(".task.selected").removeClass("selected");
-    $("#info-box-wrapper").css("visibility", "hidden");
+    if (selectedProject != undefined) {
+        selectProject(selectedProject);
+    } else {
+        $("#info-box-wrapper").css("visibility", "hidden");
+    }
 }
 
 function bindTaskCalls(projectId, taskId) {
-    var taskItem = $(taskIdPrefix + taskId);
-    taskItem.click(function () {
+    $(taskIdPrefix + taskId).click(function () {
         selectTask(projectId, taskId);
     });
 }
@@ -329,6 +339,15 @@ const newActionItemHTML = '\
         </div>\
     </div>';
 
+// Methods for task status {{{
+function setTaskStatus(status) {
+    $("#item-status-selected-option .item-field-image").attr("src", "img/status/" + status + ".png");
+    $("#item-status-selected-option .item-status-option-text").text(statusToTextMap[status]);
+    $(".task.selected .task-status img").attr("src", "img/status/" + status + ".png");
+}
+// }}}
+
+// Methods for task assignees {{{
 function removeTaskAssignee(assigneeId) {
     const assignee = $(assigneeIdPrefix + assigneeId + " .item-assignee-value").text();
     console.log(assignee);
@@ -346,13 +365,9 @@ function addTaskAssignee(assignee) {
         removeTaskAssignee(assigneeId);
     });
 }
+// }}}
 
-function setTaskStatus(status) {
-    $("#item-status-selected-option .item-field-image").attr("src", "img/status/" + status + ".png");
-    $("#item-status-selected-option .item-status-option-text").text(statusToTextMap[status]);
-    $(".task.selected .task-status img").attr("src", "img/status/" + status + ".png");
-}
-
+// Methods for task action items {{{
 function deleteActionItem(actionItemId) {
     var taskInfo = getActiveTaskInfo()
     const idx = taskInfo.action_items.indexOf(actionItemId);
@@ -427,23 +442,6 @@ function addActionItem(actionItemId) {
     }
 }
 
-function uploadTaskInfo() {
-    const taskInfo = getActiveTaskInfo();
-    $("#item-title").val(taskInfo.title);
-    setTaskStatus(taskInfo.status);
-    $("#item-assignees-box").empty();
-    $("#item-assignee-input").val("");
-    taskInfo.assignees.forEach(assignee => {
-        addTaskAssignee(assignee);
-    });
-    notesEditor.setContents(taskInfo.notes);
-    notesEditor.history.clear();
-    $("#item-actions-list").empty();
-    taskInfo.action_items.forEach(actionItemId => {
-        addActionItem(actionItemId);
-    });
-}
-
 function createNewActionItem(title = "", status = "new") {
     const actionItemId = generateRandomId(10);
     var taskInfo = getActiveTaskInfo();
@@ -451,12 +449,90 @@ function createNewActionItem(title = "", status = "new") {
     taskInfo.action_item_info[actionItemId] = { id: actionItemId, title: "", status: "new" }
     addActionItem(actionItemId);
 }
+// }}}
+
+// Methods for updating displaying info box details {{{
+function uploadProjectToInfoBox() {
+    const info = getActiveProjectInfo();
+    $("#item-title").val(info.title);
+    notesEditor.setContents(info.notes);
+    notesEditor.history.clear();
+    // Hide task specific items.
+    $("#item-status").css("display", "none");
+    $("#info-assignees").css("display", "none");
+    $("#info-actions").css("display", "none");
+}
+
+function uploadTaskToInfoBox() {
+    const info = getActiveTaskInfo();
+    $("#item-title").val(info.title);
+    setTaskStatus(info.status);
+    $("#item-assignees-box").empty();
+    $("#item-assignee-input").val("");
+    info.assignees.forEach(assignee => {
+        addTaskAssignee(assignee);
+    });
+    info.action_items.forEach(actionItemId => {
+        addActionItem(actionItemId);
+    });
+    notesEditor.setContents(info.notes);
+    notesEditor.history.clear();
+    // Show task specific items.
+    $("#item-actions-list").empty();
+    $("#item-status").css("display", "block");
+    $("#info-assignees").css("display", "flex");
+    $("#info-actions").css("display", "block");
+}
+// }}}
+
+// Methods to bind actions to info box changes {{{
+function getActiveInfoBoxSelection() {
+    if (selectedProject == undefined) {
+        return [undefined, undefined];
+    }
+    if (selectedTask == undefined) {
+        return ["project", getActiveProjectInfo()];
+    }
+    return ["task", getActiveTaskInfo()];
+}
 
 function addInfoBoxFunctions() {
+    // Shared items between project and task.
     $("#item-title").change(function () {
-        getActiveTaskInfo().title = $(this).val();
-        showUpdatedTaskInfo(selectedProject, selectedTask);
+        var [type, info] = getActiveInfoBoxSelection();
+        info.title = $(this).val();
+        if (type == "task") {
+            $(taskIdPrefix + selectedTask + " .task-title").text(info.title);
+        }
+        else if (type == "project") {
+            $(projectIdPrefix + selectedProject + " .project-title input").val(info.title);
+        }
     });
+    notesEditor.on('text-change', function () {
+        getActiveInfoBoxSelection().notes = notesEditor.getContents();
+    });
+    $("#item-delete").click(function () {
+        if (selectedTask != undefined) {
+            var tasks = getActiveProjectInfo().tasks;
+            const idx = tasks.indexOf(selectedTask);
+            if (idx > -1) {
+                tasks.splice(idx, 1);
+            }
+            delete getActiveTaskInfo();
+            $(".task.selected").remove();
+            unselectTask();
+        } else if (selectedProject != undefined) {
+            var projects = getActiveTrackerInfo().projects;
+            const idx = projects.indexOf(selectedProject);
+            if (idx > -1) {
+                projects.splice(idx, 1);
+            }
+            delete getActiveProjectInfo();
+            $(".project.selected").remove();
+            unselectProject();
+        }
+    });
+
     $("#item-assignee-input").keypress(function (e) {
         if (e.which == 13) {
             const assignee = $(this).val();
@@ -465,14 +541,11 @@ function addInfoBoxFunctions() {
                 getActiveTaskInfo().assignees.add(assignee);
                 addTaskAssignee(assignee);
             }
-            $(this).val(""); ``
+            $(this).val("");
         }
     });
-    $("#item-actions-add").click(createNewActionItem);
-    notesEditor.on('text-change', function () {
-        getActiveTaskInfo().notes = notesEditor.getContents();
-    });
 
+    $("#item-actions-add").click(createNewActionItem);
     var actionItemsListBox = $("#item-actions-list");
     actionItemsListBox.sortable({
         // handle: ".action-item-drag",
@@ -494,11 +567,9 @@ function addInfoBoxFunctions() {
 
     const taskStatusSelection = $("#item-status-selected-option");
     const taskStatusDropdown = $("#item-status-dropdown");
-
     taskStatusSelection.click(function () {
         taskStatusDropdown.toggleClass("active");
     });
-
     $("#item-status-dropdown .option").click(function () {
         const status = $(this).attr("data-value");
         setTaskStatus(status);
@@ -509,17 +580,8 @@ function addInfoBoxFunctions() {
             taskStatusDropdown.removeClass("active");
         }
     });
-    $("#item-delete").click(function () {
-        var tasks = getActiveProjectInfo().tasks;
-        const idx = tasks.indexOf(selectedTask);
-        if (idx > -1) {
-            tasks.splice(idx, 1);
-        }
-        delete getActiveTaskInfo();
-        $(".task.selected").remove();
-        unselectTask();
-    });
 }
+// }}}
 
 // -------------------------------------
 

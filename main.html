@@ -72,7 +72,7 @@
     <div class="info-box">
         <div id="info-box-wrapper">
             <div class="info-header">
-                <input id="item-title" value="This is a task">
+                <input id="item-title" value="">
                 <div id="item-status">
                     <div id="item-status-selected-option">
                         <img class="item-field-image" src="img/status/new.png">
@@ -106,13 +106,13 @@
                 </div>
             </div>
 
-            <div class="info-assignees">
+            <div id="info-assignees">
                 <img class="item-field-image" src="img/user.png">
                 <div id="item-assignees-box"></div>
                 <input id="item-assignee-input" value="" placeholder="Add assignee ...">
             </div>
 
-            <div class="info-actions">
+            <div id="info-actions">
                 <div class="item-actions-heading">Action Items</div>
                 <div id="item-actions-list"></div>
                 <div id="item-actions-add"><img src="img/add.png"> Add Item</div>
@@ -122,26 +122,20 @@
                 <div class="item-notes-heading">Notes</div>
                 <div class="info-notes-editor">
                     <div id="notes-editor">
-                        v1:
-                        <ul>
-                            <li>task (delete)</li>
-                        </ul>
                         v2:
                         <ul>
-                            <li>project (notes, assignees [collated from tasks], now tasks)</li>
-                            <li>tasks (re-order, move cancelled / completed down)</li>
-                            <li>sub-tasks (re-order, move cancelled / completed down)</li>
+                            <li>project: (status, assignees [collated from tasks])</li>
+                            <li>tasks (move cancelled / completed down)</li>
+                            <li>sub-tasks (toggle showing cancelled / completed down)</li>
                             <li>delete confirmations</li>
                         </ul>
-                        v3:
+                        v3+:
                         <ul>
-                            <li>project (delete, archive, move completed / archived projects down)</li>
+                            <li>home page</li>
+                            <li>project (delete, archive, move completed / archived projects down, now tasks))</li>
                             <li>home (aggregate now + next)</li>
                             <li>back functionality in sidebar</li>
                             <li>rebalance projects based on length</li>
-                        </ul>
-                        v4:
-                        <ul>
                             <li>activity tracking for each event</li>
                             <li>due date for each task</li>
                             <li>reminders for tasks (add project specific reminders and show in home)</li>

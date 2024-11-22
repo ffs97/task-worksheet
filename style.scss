@@ -381,30 +381,28 @@ body {
                 border: 2px solid #eddcda;
                 border-radius: 5px;
 
+                &.selected {
+                    border-color: #a3a3a3;
+                }
+
                 .project-header {
-                    padding: 15px;
                     display: flex;
                     flex-direction: row;
+                    align-items: center;
 
                     .project-title {
+                        padding: 15px;
                         flex-grow: 1;
                         padding-right: 10px;
-
-                        input {
-                            font-family: 'Lato';
-                            font-weight: 700;
-                            font-size: 17px;
-                            border: none;
-                            width: 100%;
-                            background: none;
-
-                            &:focus {
-                                outline: none;
-                            }
-                        }
+                        font-family: 'Lato';
+                        font-weight: 700;
+                        font-size: 17px;
+                        cursor: pointer;
                     }
 
                     .project-task-add {
+                        padding: 15px;
+
                         img {
                             width: 20px;
                             opacity: 0.6;
@@ -655,7 +653,7 @@ body {
             }
         }
 
-        .info-assignees {
+        #info-assignees {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -713,7 +711,7 @@ body {
             }
         }
 
-        .info-actions {
+        #info-actions {
             display: block;
             padding: 10px 25px;
             border-bottom: 1px solid #d2d2d2;
