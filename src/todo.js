@@ -193,8 +193,8 @@ function bindProjectCalls(id) {
 }
 
 function selectProject(id) {
+    unselectTask();
     selectedProject = id;
-    selectedTask = undefined;
     $(".project.selected").removeClass("selected");
     $(projectIdPrefix + id).addClass("selected");
     uploadProjectToInfoBox();
@@ -261,7 +261,7 @@ const newTaskHTML = '\
     </div>';
 
 function selectTask(projectId, taskId) {
-    selectedProject = projectId;
+    selectProject(projectId);
     selectedTask = taskId;
     $(".task.selected").removeClass("selected");
     $(taskIdPrefix + taskId).addClass("selected");
@@ -272,11 +272,7 @@ function selectTask(projectId, taskId) {
 function unselectTask() {
     selectedTask = undefined;
     $(".task.selected").removeClass("selected");
-    if (selectedProject != undefined) {
-        selectProject(selectedProject);
-    } else {
-        $("#info-box-wrapper").css("visibility", "hidden");
-    }
+    $("#info-box-wrapper").css("visibility", "hidden");
 }
 
 function bindTaskCalls(projectId, taskId) {
