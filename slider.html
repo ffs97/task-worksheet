@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Box with Icons</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f4f4f4;
+        }
+
+        .custom-select-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .custom-select {
+            position: relative;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-select .selected-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .custom-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .custom-dropdown.active {
+            display: block;
+        }
+
+        .custom-dropdown .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .custom-dropdown .option:hover {
+            background: #f0f0f0;
+        }
+
+        .custom-dropdown .option .icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-select-container">
+        <div class="custom-select" id="customSelect">
+            <span class="selected-icon">🌟</span>
+            <span class="selected-text">Select an Option</span>
+            <span>▼</span>
+        </div>
+        <div class="custom-dropdown" id="customDropdown">
+            <div class="option" data-value="star" data-icon="🌟">
+                <span class="icon">🌟</span> Star
+            </div>
+            <div class="option" data-value="heart" data-icon="❤️">
+                <span class="icon">❤️</span> Heart
+            </div>
+            <div class="option" data-value="check" data-icon="✔️">
+                <span class="icon">✔️</span> Check
+            </div>
+            <div class="option" data-value="smile" data-icon="😊">
+                <span class="icon">😊</span> Smile
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const customSelect = document.getElementById("customSelect");
+        const customDropdown = document.getElementById("customDropdown");
+        const selectedText = customSelect.querySelector(".selected-text");
+        const selectedIcon = customSelect.querySelector(".selected-icon");
+
+        customSelect.addEventListener("click", () => {
+            customDropdown.classList.toggle("active");
+        });
+
+        document.querySelectorAll(".custom-dropdown .option").forEach(option => {
+            option.addEventListener("click", () => {
+                const value = option.getAttribute("data-value");
+                const icon = option.getAttribute("data-icon");
+                const text = option.textContent.trim();
+
+                selectedIcon.textContent = icon;
+                selectedText.textContent = text;
+
+                customDropdown.classList.remove("active");
+            });
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener("click", (e) => {
+            if (!customSelect.contains(e.target)) {
+                customDropdown.classList.remove("active");
+            }
+        });
+    </script>
+</body>
+</html>

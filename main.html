@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Worksheet</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.bubble.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <script src="src/clock.js"></script>
+    <script type="module" src="src/todo.js"></script>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="header"><img src="img/todo.png">Task Worksheet</div>
+        <div class="tracker-list-box">
+            <ul id="tracker-list">
+            </ul>
+            <div id="tracker-add-button"><img src="img/add.png"><span>Add Tracker</span></div>
+        </div>
+        <div class="sidebar-importer-buttons">
+            <div class="read-todo-file">Import new worksheet</div>
+            <div class="create-todo-file">... or save to a new file</div>
+        </div>
+        <div class="clock"><span id="clock-hour">12</span><span>:</span><span id="clock-minute">45</span></div>
+    </div>
+    <div id="tracker-dialog-container">
+        <div class="tracker-dialog">
+            <div class="tracker-dialog-header">
+                <span class="tracker-dialog-heading">Add Tracker</span>
+                <span id="tracker-dialog-close-button"><img src="img/remove.png"></span>
+            </div>
+            <div class="tracker-dialog-form">
+                <div class="tracker-dialog-form-label">What do you want to call your tracker?</div>
+                <div class="tracker-dialog-input-wrapper">
+                    <input id="tracker-dialog-id-input" placeholder="my-tracker-id">
+                </div>
+                <div class="tracker-dialog-submit-wrapper"><input type="button" id="tracker-dialog-create-button"
+                        value="Create" disabled></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tracker-container">
+        <div class="tracker-header">
+            <div id="tracker-header-id"></div>
+            <div id="tracker-header-title"><input placeholder="Untilted Tracker"></div>
+            <div id="tracker-header-description"><textarea placeholder=""></textarea></div>
+            <span id="project-add-button"><img src="img/plus.png"></span>
+        </div>
+        <div class="tracker-project-box">
+            <div class="project-column"></div>
+            <div class="project-column"></div>
+            <div class="project-column"></div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <div id="info-box-wrapper">
+            <div class="info-header">
+                <input id="item-title" value="This is a task">
+                <div id="item-status">
+                    <div id="item-status-selected-option">
+                        <img class="item-field-image" src="img/status/new.png">
+                        <span class="item-status-option-text">New</span>
+                        <img class="item-status-option-selector" src="img/down.png">
+                    </div>
+                    <div id="item-status-dropdown">
+                        <div class="option" data-value="new">
+                            <img class="item-field-image" src="img/status/new.png">
+                            <span class="item-status-option-text">New</span>
+                        </div>
+                        <div class="option" data-value="in_progress">
+                            <img class="item-field-image" src="img/status/in_progress.png">
+                            <span class="item-status-option-text">In Progress</span>
+                        </div>
+                        <div class="option" data-value="pending">
+                            <img class="item-field-image" src="img/status/pending.png">
+                            <span class="item-status-option-text">Pending</span>
+                        </div>
+                        <div class="option" data-value="cancelled">
+                            <img class="item-field-image" src="img/status/cancelled.png">
+                            <span class="item-status-option-text">Cancelled</span>
+                        </div>
+                        <div class="option" data-value="completed">
+                            <img class="item-field-image" src="img/status/completed.png">
+                            <span class="item-status-option-text">Completed</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="item-status item-header-action">
+                <img class="item-field-image" src="img/status.png">
+                <span class="item-field-value">New</span>
+            </div> -->
+                <div class="item-delete item-header-action"><img class="item-field-image" src="img/delete.png"></div>
+            </div>
+
+            <div class="info-assignees">
+                <img class="item-field-image" src="img/user.png">
+                <div id="item-assignees-box"></div>
+                <input id="item-assignee-input" value="" placeholder="Add assignee ...">
+            </div>
+
+            <div class="info-actions">
+                <div class="item-actions-heading">Action Items</div>
+                <div id="item-actions-list"></div>
+                <div id="item-actions-add"><img src="img/add.png"> Add Item</div>
+            </div>
+
+            <div class="info-notes">
+                <div class="item-notes-heading">Notes</div>
+                <div class="info-notes-editor">
+                    <div id="notes-editor">
+                        v1:
+                        <ul>
+                            <li>task (delete)</li>
+                        </ul>
+                        v2:
+                        <ul>
+                            <li>project (notes, assignees [collated from tasks], now tasks)</li>
+                            <li>tasks (re-order, move cancelled / completed down)</li>
+                            <li>sub-tasks (re-order, move cancelled / completed down)</li>
+                        </ul>
+                        v3:
+                        <ul>
+                            <li>project (delete, archive, move completed / archived projects down)</li>
+                            <li>home (aggregate now + next)</li>
+                            <li>back functionality in sidebar</li>
+                            <li>rebalance projects based on length</li>
+                        </ul>
+                        v4:
+                        <ul>
+                            <li>activity tracking for each event</li>
+                            <li>due date for each task</li>
+                            <li>reminders for tasks (add project specific reminders and show in home)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="importer">
+        <div class="header"><img src="img/todo.png"><span>Task Worksheet</span></div>
+        <div class="importer-buttons-wrapper">
+            <div class="read-todo-file">Read from existing file</div>
+            <div class="create-todo-file">Create new TODO file</div>
+        </div>
+    </div>
+</body>
+
+</html>
