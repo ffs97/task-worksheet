@@ -497,15 +497,6 @@ body {
 .info-box #info-box-wrapper .info-header #item-title:focus {
   outline: none;
 }
-.info-box #info-box-wrapper .info-header .item-header-action {
-  align-self: center;
-  border-radius: 3px;
-  height: 32px;
-  margin: 0 5px;
-}
-.info-box #info-box-wrapper .info-header .item-header-action:hover {
-  background-color: rgba(53, 13, 54, 0.0745098039);
-}
 .info-box #info-box-wrapper .info-header #item-status {
   background-color: #e3e3e3;
   border: 1px solid #cccccc;
@@ -559,15 +550,20 @@ body {
   margin-right: 10px;
   font-size: 1.2em;
 }
-.info-box #info-box-wrapper .info-header .item-delete {
+.info-box #info-box-wrapper .info-header #item-delete {
   display: flex;
+  cursor: pointer;
   align-items: end;
-  padding: 0 3px 5px 3px;
+  padding: 0 3px 6px 3px;
+  align-self: center;
+  border-radius: 3px;
+  height: 32px;
+  margin: 0 5px;
 }
-.info-box #info-box-wrapper .info-header .item-delete img {
+.info-box #info-box-wrapper .info-header #item-delete img {
   display: block;
 }
-.info-box #info-box-wrapper .info-header .item-delete:hover {
+.info-box #info-box-wrapper .info-header #item-delete:hover {
   background-color: rgba(224, 20, 74, 0.5254901961);
 }
 .info-box #info-box-wrapper .info-assignees {

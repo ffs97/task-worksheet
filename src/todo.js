@@ -19,8 +19,16 @@ function generateRandomId(len) {
     return text;
 }
 
+function getActiveTrackerInfo() {
+    return todo.tracker_info[selectedTracker];
+}
+
+function getActiveProjectInfo() {
+    return getActiveTrackerInfo().project_info[selectedProject]
+}
+
 function getActiveTaskInfo() {
-    return todo.tracker_info[selectedTracker].project_info[selectedProject].task_info[selectedTask];
+    return getActiveProjectInfo().task_info[selectedTask];
 }
 
 // -------------------------------------
@@ -459,12 +467,20 @@ function addInfoBoxFunctions() {
         setTaskStatus(status);
         getActiveTaskInfo().status = status;
     });
-
-    // Close dropdown if clicked outside
     document.addEventListener("click", (e) => {
         if ($("#item-status-selected-option").has(e.target).length == 0) {
             taskStatusDropdown.removeClass("active");
         }
+    });
+    $("#item-delete").click(function () {
+        var tasks = getActiveProjectInfo().tasks;
+        const idx = tasks.indexOf(selectedTask);
+        if (idx > -1) {
+            tasks.splice(idx, 1);
+        }
+        delete getActiveTaskInfo();
+        $(".task.selected").remove();
+        unselectTask();
     });
 }
 

@@ -575,17 +575,6 @@ body {
                 }
             }
 
-            .item-header-action {
-                align-self: center;
-                border-radius: 3px;
-                height: 32px;
-                margin: 0 5px;
-
-                &:hover {
-                    background-color: #350d3613;
-                }
-            }
-
             #item-status {
                 background-color: #e3e3e3;
                 border: 1px solid #cccccc;
@@ -648,10 +637,15 @@ body {
                 }
             }
 
-            .item-delete {
+            #item-delete {
                 display: flex;
+                cursor: pointer;
                 align-items: end;
-                padding: 0 3px 5px 3px;
+                padding: 0 3px 6px 3px;
+                align-self: center;
+                border-radius: 3px;
+                height: 32px;
+                margin: 0 5px;
 
                 img {
                     display: block;
