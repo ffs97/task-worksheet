@@ -172,6 +172,24 @@ function bindProjectCalls(id) {
     projectBox.find(".project-task-add").click(function () {
         createNewTask(id);
     });
+    var taskBox = projectBox.find(".project-task-box");
+    taskBox.sortable({
+        handle: ".task-drag",
+        helper: "clone",
+        opacity: 0.65,
+        axis: "y",
+        containment: "parent",
+        cursor: "move",
+        delay: 150,
+        revert: 100,
+        update: function (_event, _ui) {
+            var tasks = [];
+            taskBox.children(".task").each(function () {
+                tasks.push($(this).attr("id").substring(taskIdPrefix.length - 1));
+            });
+            getActiveTrackerInfo().project_info[id].tasks = tasks.slice();
+        }
+    });
 }
 
 function addProject(id) {
@@ -453,6 +471,25 @@ function addInfoBoxFunctions() {
     $("#item-actions-add").click(createNewActionItem);
     notesEditor.on('text-change', function () {
         getActiveTaskInfo().notes = notesEditor.getContents();
+    });
+
+    var actionItemsListBox = $("#item-actions-list");
+    actionItemsListBox.sortable({
+        // handle: ".action-item-drag",
+        helper: "clone",
+        opacity: 0.65,
+        axis: "y",
+        containment: "parent",
+        cursor: "move",
+        delay: 150,
+        revert: 100,
+        update: function (_event, _ui) {
+            var actionItems = [];
+            actionItemsListBox.children(".item-action").each(function () {
+                actionItems.push($(this).attr("id").substring(actionItemIdPrefix.length - 1));
+            });
+            getActiveTaskInfo().action_items = actionItems.slice();
+        }
     });
 
     const taskStatusSelection = $("#item-status-selected-option");

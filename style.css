@@ -390,6 +390,7 @@ body {
   border-radius: 3px;
   display: flex;
   flex-direction: row;
+  cursor: pointer;
   align-items: center;
 }
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task .task-status {
@@ -414,11 +415,7 @@ body {
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task .task-drag:hover {
   cursor: grab;
 }
-.tracker-container .tracker-project-box .project-column .project .project-task-box .task:hover {
-  background-color: #eddcda;
-  cursor: pointer;
-}
-.tracker-container .tracker-project-box .project-column .project .project-task-box .task.selected {
+.tracker-container .tracker-project-box .project-column .project .project-task-box .task:hover, .tracker-container .tracker-project-box .project-column .project .project-task-box .task.selected, .tracker-container .tracker-project-box .project-column .project .project-task-box .task.ui-sortable-placeholder {
   background-color: #eddcda;
 }
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task:last-of-type {

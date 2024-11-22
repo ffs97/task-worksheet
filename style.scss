@@ -448,6 +448,7 @@ body {
                         border-radius: 3px;
                         display: flex;
                         flex-direction: row;
+                        cursor: pointer;
                         align-items: center;
 
                         .task-status {
@@ -478,12 +479,9 @@ body {
                             }
                         }
 
-                        &:hover {
-                            background-color: #eddcda;
-                            cursor: pointer;
-                        }
-
-                        &.selected {
+                        &:hover,
+                        &.selected,
+                        &.ui-sortable-placeholder {
                             background-color: #eddcda
                         }
 
