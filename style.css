@@ -400,7 +400,7 @@ body {
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task {
   border-bottom: 1px solid rgba(83, 39, 83, 0.2274509804);
   padding: 15px 0;
-  border-radius: 3px;
+  border-radius: 5px;
   display: flex;
   flex-direction: row;
   cursor: pointer;
@@ -429,7 +429,7 @@ body {
   cursor: grab;
 }
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task:hover, .tracker-container .tracker-project-box .project-column .project .project-task-box .task.selected, .tracker-container .tracker-project-box .project-column .project .project-task-box .task.ui-sortable-placeholder {
-  background-color: #eddcda;
+  background-color: #eee6e5;
 }
 .tracker-container .tracker-project-box .project-column .project .project-task-box .task:last-of-type {
   border: none;

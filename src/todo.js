@@ -105,6 +105,7 @@ function selectTracker(id) {
     selectedTracker = id;
     $(trackerIdPrefix + id).addClass("selected");
     const info = getActiveTrackerInfo();
+    trackerIdElem.text("#" + info.id);
     trackerTitleElem.val(info.title);
     if (info.description != "") {
         trackerDescElem.val(info.description);
@@ -454,6 +455,7 @@ function uploadProjectToInfoBox() {
     notesEditor.setContents(info.notes);
     notesEditor.history.clear();
     // Hide task specific items.
+    $("#item-actions-list").empty();
     $("#item-status").css("display", "none");
     $("#info-assignees").css("display", "none");
     $("#info-actions").css("display", "none");
@@ -474,7 +476,6 @@ function uploadTaskToInfoBox() {
     notesEditor.setContents(info.notes);
     notesEditor.history.clear();
     // Show task specific items.
-    $("#item-actions-list").empty();
     $("#item-status").css("display", "block");
     $("#info-assignees").css("display", "flex");
     $("#info-actions").css("display", "block");
@@ -504,10 +505,9 @@ function addInfoBoxFunctions() {
             $(projectIdPrefix + selectedProject + " .project-title input").val(info.title);
         }
     });
-    notesEditor.on('text-change', function () {
-        getActiveInfoBoxSelection().notes = notesEditor.getContents();
+    notesEditor.on("text-change", function () {
+        getActiveInfoBoxSelection()[1].notes = notesEditor.getContents();
     });
-
 
     var deleteDialog = $("#delete-dialog-container");
     $("#delete-dialog-close-button").click(function () {
@@ -559,37 +559,35 @@ function addInfoBoxFunctions() {
 
     $("#item-actions-add").click(createNewActionItem);
     var actionItemsListBox = $("#item-actions-list");
-    actionItemsListBox.sortable({
-        // handle: ".action-item-drag",
-        helper: "clone",
-        opacity: 0.65,
-        axis: "y",
-        containment: "parent",
-        cursor: "move",
-        delay: 150,
-        revert: 100,
-        update: function (_event, _ui) {
-            var actionItems = [];
-            actionItemsListBox.children(".item-action").each(function () {
-                actionItems.push($(this).attr("id").substring(actionItemIdPrefix.length - 1));
-            });
-            getActiveTaskInfo().action_items = actionItems.slice();
-        }
-    });
+    // actionItemsListBox.sortable({
+    //     // handle: ".action-item-drag",
+    //     helper: "clone",
+    //     opacity: 0.65,
+    //     axis: "y",
+    //     containment: "parent",
+    //     cursor: "move",
+    //     delay: 150,
+    //     revert: 100,
+    //     update: function (_event, _ui) {
+    //         var actionItems = [];
+    //         actionItemsListBox.children(".item-action").each(function () {
+    //             actionItems.push($(this).attr("id").substring(actionItemIdPrefix.length - 1));
+    //         });
+    //         getActiveTaskInfo().action_items = actionItems.slice();
+    //     }
+    // });
 
-    const taskStatusSelection = $("#item-status-selected-option");
     const taskStatusDropdown = $("#item-status-dropdown");
-    taskStatusSelection.click(function () {
-        taskStatusDropdown.toggleClass("active");
-    });
     $("#item-status-dropdown .option").click(function () {
         const status = $(this).attr("data-value");
         setTaskStatus(status);
         getActiveTaskInfo().status = status;
     });
     document.addEventListener("click", (e) => {
-        if ($("#item-status-selected-option").has(e.target).length == 0) {
+        if ($("#item-status").has(e.target).length == 0) {
             taskStatusDropdown.removeClass("active");
+        } else {
+            taskStatusDropdown.toggleClass("active");
         }
     });
 }

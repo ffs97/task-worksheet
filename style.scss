@@ -460,7 +460,7 @@ body {
                     .task {
                         border-bottom: 1px solid #5327533a;
                         padding: 15px 0;
-                        border-radius: 3px;
+                        border-radius: 5px;
                         display: flex;
                         flex-direction: row;
                         cursor: pointer;
@@ -497,7 +497,7 @@ body {
                         &:hover,
                         &.selected,
                         &.ui-sortable-placeholder {
-                            background-color: #eddcda
+                            background-color: #eee6e5
                         }
 
                         &:last-of-type {
