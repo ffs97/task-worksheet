@@ -327,12 +327,12 @@ const newAssigneeHTML = '\
         <span class="item-assignee-remove"><img src="img/remove.png"></span> \
     </div>';
 const newActionItemHTML = '\
-    <div class="item-action" id="{action_item_id}"> \
-        <div class="item-action-checkbox"><img src="img/check.png"></div>\
-        <textarea class="item-action-textarea" placeholder="What is my purpose?">{action_item_title}</textarea>\
-        <div class="item-action-buttons">\
-            <img class="item-action-archive" src="img/archive.png">\
-            <img class="item-action-delete" src="img/trash.png">\
+    <div class="action-item" id="{action_item_id}"> \
+        <div class="action-item-checkbox"><img src="img/check.png"></div>\
+        <textarea class="action-item-textarea" placeholder="What is my purpose?">{action_item_title}</textarea>\
+        <div class="action-item-buttons">\
+            <img class="action-item-archive" src="img/archive.png">\
+            <img class="action-item-delete" src="img/trash.png">\
         </div>\
     </div>';
 
@@ -378,7 +378,7 @@ function deleteActionItem(actionItemId) {
 function archiveActionItem(actionItemId) {
     var container = $(actionItemIdPrefix + actionItemId);
     if (container.hasClass("completed")) return;
-    var archiveButton = container.find(".item-action-buttons .item-action-archive");
+    var archiveButton = container.find(".action-item-buttons .action-item-archive");
     var actionItemInfo = getActiveTaskInfo().action_item_info[actionItemId];
     container.toggleClass("archived");
     if (container.hasClass("archived")) {
@@ -390,6 +390,7 @@ function archiveActionItem(actionItemId) {
         archiveButton.prop("src", "img/archive.png");
         actionItemInfo.status = "new";
     }
+    $(actionItemIdPrefix + actionItemId).remove();
 }
 
 function completeActionItem(actionItemId) {
@@ -402,28 +403,38 @@ function completeActionItem(actionItemId) {
     } else {
         actionItemInfo.status = "new";
     }
+    $(actionItemIdPrefix + actionItemId).remove();
 };
 
 function addActionItem(actionItemId) {
     const actionItemInfo = getActiveTaskInfo().action_item_info[actionItemId];
+    if (actionItemInfo.status == "completed" || actionItemInfo.status == "archived") {
+        return;
+    }
     var actionItemHTML = newActionItemHTML
         .replaceAll("{action_item_id}", actionItemIdPrefix.substring(1) + actionItemId)
         .replaceAll("{action_item_title}", actionItemInfo.title);
-    $("#item-actions-list").append(actionItemHTML);
+    $("#action-items-list").append(actionItemHTML);
 
     var container = $(actionItemIdPrefix + actionItemId);
-    container.find(".item-action-textarea").on("blur keyup paste input", function () {
+    var actionItemTextarea = container.find(".action-item-textarea");
+    actionItemTextarea.on("click blur keyup paste input", function () {
+        console.log($(this).prop("scrollHeight") + "px");
         actionItemInfo.title = $(this).val();
         $(this).css("height", 0);
         $(this).css("height", $(this).prop("scrollHeight") + "px");
     });
-    container.find(".item-action-buttons .item-action-delete").click(function () {
+    actionItemTextarea.css("height", 0);
+    console.log(actionItemTextarea.prop("scrollHeight") + "px");
+    console.log(actionItemTextarea.text());
+    actionItemTextarea.css("height", actionItemTextarea.prop("scrollHeight") + "px");
+    container.find(".action-item-buttons .action-item-delete").click(function () {
         deleteActionItem(actionItemId);
     });
-    container.find(".item-action-buttons .item-action-archive").click(function () {
+    container.find(".action-item-buttons .action-item-archive").click(function () {
         archiveActionItem(actionItemId);
     });
-    container.find(".item-action-checkbox").click(function () {
+    container.find(".action-item-checkbox").click(function () {
         completeActionItem(actionItemId);
     });
 
@@ -455,7 +466,7 @@ function uploadProjectToInfoBox() {
     notesEditor.setContents(info.notes);
     notesEditor.history.clear();
     // Hide task specific items.
-    $("#item-actions-list").empty();
+    $("#action-items-list").empty();
     $("#item-status").css("display", "none");
     $("#info-assignees").css("display", "none");
     $("#info-actions").css("display", "none");
@@ -502,7 +513,7 @@ function addInfoBoxFunctions() {
             $(taskIdPrefix + selectedTask + " .task-title").text(info.title);
         }
         else if (type == "project") {
-            $(projectIdPrefix + selectedProject + " .project-title input").val(info.title);
+            $(projectIdPrefix + selectedProject + " .project-title").text(info.title);
         }
     });
     notesEditor.on("text-change", function () {
@@ -557,25 +568,25 @@ function addInfoBoxFunctions() {
         }
     });
 
-    $("#item-actions-add").click(createNewActionItem);
-    var actionItemsListBox = $("#item-actions-list");
-    // actionItemsListBox.sortable({
-    //     // handle: ".action-item-drag",
-    //     helper: "clone",
-    //     opacity: 0.65,
-    //     axis: "y",
-    //     containment: "parent",
-    //     cursor: "move",
-    //     delay: 150,
-    //     revert: 100,
-    //     update: function (_event, _ui) {
-    //         var actionItems = [];
-    //         actionItemsListBox.children(".item-action").each(function () {
-    //             actionItems.push($(this).attr("id").substring(actionItemIdPrefix.length - 1));
-    //         });
-    //         getActiveTaskInfo().action_items = actionItems.slice();
-    //     }
-    // });
+    $("#action-items-add").click(createNewActionItem);
+    var actionItemsListBox = $("#action-items-list");
+    actionItemsListBox.sortable({
+        // handle: ".action-item-drag",
+        helper: "clone",
+        opacity: 0.65,
+        axis: "y",
+        containment: "parent",
+        cursor: "move",
+        delay: 150,
+        revert: 100,
+        update: function (_event, _ui) {
+            var actionItems = [];
+            actionItemsListBox.children(".action-item").each(function () {
+                actionItems.push($(this).attr("id").substring(actionItemIdPrefix.length - 1));
+            });
+            getActiveTaskInfo().action_items = actionItems.slice();
+        }
+    });
 
     const taskStatusDropdown = $("#item-status-dropdown");
     $("#item-status-dropdown .option").click(function () {

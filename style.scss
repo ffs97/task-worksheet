@@ -13,7 +13,7 @@ body {
 }
 
 .sidebar {
-    flex: 1 0 150px;
+    flex: 15%;
     order: 1;
     background-color: #3f1e40;
     color: #bbd2d8;
@@ -263,7 +263,7 @@ body {
 }
 
 .tracker-container {
-    flex: 6 0 400px;
+    flex: 40%;
     order: 2;
     display: flex;
     flex-direction: column;
@@ -516,7 +516,7 @@ body {
 }
 
 .info-box {
-    flex: 2 0 250px;
+    flex: 30%;
     order: 3;
     z-index: 1;
     background-color: white;
@@ -732,8 +732,24 @@ body {
             display: block;
             padding: 10px 25px;
             border-bottom: 1px solid #d2d2d2;
+            max-height: 50%;
+            overflow: auto;
 
-            .item-actions-heading {
+            &::-webkit-scrollbar {
+                width: 5px;
+                position: absolute;
+                left: 0;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: #d9d8de;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: #9899a9;
+            }
+
+            .action-items-heading {
                 align-items: center;
                 margin-bottom: 12px;
                 font-size: 14px;
@@ -744,23 +760,22 @@ body {
                 text-underline-offset: 3px;
             }
 
-            #item-actions-list {
+            #action-items-list {
                 display: flex;
                 flex-direction: column;
                 padding: 10px;
                 gap: 15px;
 
-                .item-action {
+                .action-item {
                     display: flex;
                     flex-direction: row;
-                    min-height: 35px;
                     font-size: 13px;
                     padding: 0 10px;
                     background-color: #f6f6f6;
                     border: 1px solid #e2e2e2;
                     border-radius: 5px;
 
-                    .item-action-checkbox {
+                    .action-item-checkbox {
                         position: relative;
                         width: 22px;
                         height: 22px;
@@ -783,7 +798,7 @@ body {
                         }
                     }
 
-                    .item-action-textarea {
+                    .action-item-textarea {
                         flex-grow: 1;
                         padding: 10px;
                         font-family: 'Noto Sans';
@@ -806,7 +821,7 @@ body {
                         }
                     }
 
-                    .item-action-buttons {
+                    .action-item-buttons {
                         padding-top: 5px;
 
                         img {
@@ -822,17 +837,17 @@ body {
                     }
 
                     &.completed {
-                        .item-action-buttons {
-                            .item-action-archive {
+                        .action-item-buttons {
+                            .action-item-archive {
                                 visibility: hidden;
                             }
                         }
 
-                        .item-action-checkbox {
+                        .action-item-checkbox {
                             background-color: #a0a0a0;
                         }
 
-                        .item-action-textarea {
+                        .action-item-textarea {
                             text-decoration: line-through gray;
                         }
                     }
@@ -840,18 +855,18 @@ body {
                     &.archived {
                         background: red;
 
-                        .item-action-checkbox {
+                        .action-item-checkbox {
                             background-color: #a0a0a0;
                         }
 
-                        .item-action-textarea {
+                        .action-item-textarea {
                             text-decoration: line-through gray;
                         }
                     }
                 }
             }
 
-            #item-actions-add {
+            #action-items-add {
                 display: inline-flex;
                 align-items: center;
                 height: 30px;
@@ -926,6 +941,8 @@ body {
                     }
 
                     .ql-editor {
+                        font-family: "Google Sans", "Helvetica", "Noto Sans", "Arial", sans-serif;
+
                         &::-webkit-scrollbar {
                             width: 5px;
                             position: absolute;
