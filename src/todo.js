@@ -305,7 +305,7 @@ function createNewTask(projectId, title = "Untitled task", status = "new") {
 }
 
 function addTasks(projectId) {
-    var taskIds = todo.tracker_info[selectedTracker].project_info[projectId].tasks;
+    const taskIds = todo.tracker_info[selectedTracker].project_info[projectId].tasks;
     taskIds.forEach(id => {
         addTask(projectId, id);
     });
@@ -403,14 +403,11 @@ function completeActionItem(actionItemId) {
     } else {
         actionItemInfo.status = "new";
     }
-    $(actionItemIdPrefix + actionItemId).remove();
+    // $(actionItemIdPrefix + actionItemId).remove();
 };
 
 function addActionItem(actionItemId) {
     const actionItemInfo = getActiveTaskInfo().action_item_info[actionItemId];
-    if (actionItemInfo.status == "completed" || actionItemInfo.status == "archived") {
-        return;
-    }
     var actionItemHTML = newActionItemHTML
         .replaceAll("{action_item_id}", actionItemIdPrefix.substring(1) + actionItemId)
         .replaceAll("{action_item_title}", actionItemInfo.title);
@@ -419,14 +416,11 @@ function addActionItem(actionItemId) {
     var container = $(actionItemIdPrefix + actionItemId);
     var actionItemTextarea = container.find(".action-item-textarea");
     actionItemTextarea.on("click blur keyup paste input", function () {
-        console.log($(this).prop("scrollHeight") + "px");
         actionItemInfo.title = $(this).val();
         $(this).css("height", 0);
         $(this).css("height", $(this).prop("scrollHeight") + "px");
     });
     actionItemTextarea.css("height", 0);
-    console.log(actionItemTextarea.prop("scrollHeight") + "px");
-    console.log(actionItemTextarea.text());
     actionItemTextarea.css("height", actionItemTextarea.prop("scrollHeight") + "px");
     container.find(".action-item-buttons .action-item-delete").click(function () {
         deleteActionItem(actionItemId);
@@ -534,7 +528,7 @@ function addInfoBoxFunctions() {
             if (idx > -1) {
                 tasks.splice(idx, 1);
             }
-            delete getActiveTaskInfo();
+            delete todo.tracker_info[selectedTracker].project_info[selectedProject].task_info[selectedTask];
             $(".task.selected").remove();
             unselectTask();
         } else if (selectedProject != undefined) {
@@ -543,7 +537,7 @@ function addInfoBoxFunctions() {
             if (idx > -1) {
                 projects.splice(idx, 1);
             }
-            delete getActiveProjectInfo();
+            delete todo.tracker_info[selectedTracker].project_info[selectedProject];
             $(".project.selected").remove();
             unselectProject();
         }
