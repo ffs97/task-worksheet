@@ -10,6 +10,7 @@ body {
     flex-wrap: nowrap;
     height: 100vh;
     font-family: 'Noto Sans', sans-serif;
+    user-select: none;
 }
 
 .sidebar {
@@ -460,7 +461,6 @@ body {
                     .task {
                         border-bottom: 1px solid #5327533a;
                         padding: 15px 0;
-                        border-radius: 5px;
                         display: flex;
                         flex-direction: row;
                         cursor: pointer;
@@ -497,7 +497,7 @@ body {
                         &:hover,
                         &.selected,
                         &.ui-sortable-placeholder {
-                            background-color: #eee6e5
+                            background-color: #f2e8e7;
                         }
 
                         &:last-of-type {
@@ -760,37 +760,60 @@ body {
                 text-underline-offset: 3px;
             }
 
-            #action-items-list {
+            .toggle-button-wrapper {
+                margin: 8px 16px 5px 0;
+                text-align: right;
+
+                .toggle-button {
+                    display: inline-block;
+                    margin-left: 20px;
+                    cursor: pointer;
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                }
+            }
+
+            .action-items-wrapper {
+                overflow: hidden;
+                height: 0;
+
+                .action-items-list {
+                    padding: 0;
+                    margin: 10px 10px 0 10px;
+
+                    .action-item:last-of-type {
+                        border-bottom: none;
+                    }
+                }
+            }
+
+            .action-items-list {
                 display: flex;
                 flex-direction: column;
                 padding: 10px;
-                gap: 15px;
 
                 .action-item {
                     display: flex;
                     flex-direction: row;
                     font-size: 13px;
-                    padding: 0 10px;
-                    background-color: #f6f6f6;
-                    border: 1px solid #e2e2e2;
-                    border-radius: 5px;
+                    padding: 4px 53.6px 4px 10px;
+                    // border-bottom: 1px solid #ececec;
+                    margin: 0;
 
                     .action-item-checkbox {
                         position: relative;
-                        width: 22px;
-                        height: 22px;
-                        margin-top: 9px;
-                        background-color: red;
+                        width: 18px;
+                        height: 18px;
                         border-radius: 50%;
                         border: 1px solid #a0a0a0;
-                        background-color: white;
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        margin: auto;
 
                         img {
-                            height: 14px;
-                            width: 14px;
+                            height: 12px;
+                            width: 12px;
                         }
 
                         &:hover {
@@ -808,12 +831,14 @@ body {
                         font-size: 13px;
                         line-height: 20px;
                         min-height: 40px;
-                        height: 37px;
+                        height: auto;
                         color: #505050;
                         overflow: hidden;
 
-                        &:focus {
+                        &:focus,
+                        &:hover {
                             outline: none;
+                            border: none;
                         }
 
                         &::placeholder {
@@ -823,6 +848,7 @@ body {
 
                     .action-item-buttons {
                         padding-top: 5px;
+                        display: none;
 
                         img {
                             opacity: 0.5;
@@ -831,9 +857,13 @@ body {
                         }
                     }
 
-                    &:hover,
-                    &:focus-within {
-                        border: 1px solid #808080;
+                    &:hover {
+                        padding-right: 10px;
+
+                        .action-item-buttons {
+                            display: block;
+
+                        }
                     }
 
                     &.completed {
@@ -846,17 +876,15 @@ body {
                         .action-item-checkbox {
                             background-color: #a0a0a0;
                         }
-
-                        .action-item-textarea {
-                            text-decoration: line-through gray;
-                        }
                     }
 
                     &.archived {
-                        background: red;
-
                         .action-item-checkbox {
                             background-color: #a0a0a0;
+
+                            img {
+                                display: none;
+                            }
                         }
 
                         .action-item-textarea {
